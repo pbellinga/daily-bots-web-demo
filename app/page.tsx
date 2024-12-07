@@ -83,16 +83,32 @@ export default function Home() {
       })
     ) as LLMHelper;
 
-    llmHelper.handleFunctionCall(async (fn: FunctionCallParams) => {
-      const args = fn.arguments as any;
-      if (fn.functionName === "get_weather" && args.location) {
-        const response = await fetch(
-          `/api/weather?location=${encodeURIComponent(args.location)}`
-        );
-        const json = await response.json();
-        return json;
-      } else {
-        return { error: "couldn't fetch weather" };
+    // llmHelper.handleFunctionCall(async (fn: FunctionCallParams) => {
+    //   const args = fn.arguments as any;
+    //   if (fn.functionName === "get_weather" && args.location) {
+    //     const response = await fetch(
+    //       `/api/weather?location=${encodeURIComponent(args.location)}`
+    //     );
+    //     const json = await response.json();
+    //     return json;
+    //   } else {
+    //     return { error: "couldn't fetch weather" };
+    //   }
+
+      llmHelper.handleFunctionCall(async (fn: FunctionCallParams) => {
+        const args = fn.arguments as any;
+        if (fn.functionName === "search_similar_learning_questions") {
+          console.log("Going to call the API for similar learning questions");
+          const response = await fetch(
+            `/api/semantic_search?original_question=blue`
+          );
+          if (response.ok) {
+            console.log("Successfully called the API for similar learning questions");
+          }
+          const json = await response.json();
+          return json;
+        } else {
+        return { error: "couldn't fetch similar learning questions" };
       }
     });
     

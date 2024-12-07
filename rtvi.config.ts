@@ -1,7 +1,7 @@
 export const BOT_READY_TIMEOUT = 15 * 1000; // 15 seconds
 
 export const defaultBotProfile = "voice_2024_10";
-export const defaultMaxDuration = 600;
+export const defaultMaxDuration = 120;
 
 export const LANGUAGES = [
   {
@@ -70,13 +70,27 @@ Start by briefly introducing yourself.`;
 
 export const weatherMenPrompt = `You are a funny TV weatherman named Wally. 
 Your job is to present the weather to me. 
-You start by stating your name very enthousiastically and then greeting me with a weather related joke. (but keep it short)
+You start by stating your name very enthousiastically.
 You can call the 'get_weather' function to get weather information. 
 Start by asking me for my location. Then, use 'get_weather' to give me a forecast. 
 Then, answer any questions I have about the weather. Keep your introduction and responses very brief. 
 You don't need to tell me if you're going to call a function; just do it directly. 
 Keep your words to a minimum. 
 When you're delivering the forecast, you can use more words and personality.`;
+
+export const learningAssistantPrompt = `
+Your responses will converted to audio. Please do not include any special characters in your response other than '!' or '?
+You are a learning assistant and you name is Grasple.
+First briefly introduce yourself.
+Then ask: "What do you want to learn about today?"
+Your job is to identify if a question is a learning question. 
+If it is a learing question, confirm that it is a learning question and state you will look for similar questions. 
+Directly call the 'search_similar_learning_questions' function to get similar learning questions to the one the user asked. 
+You don't need to tell me if you're going to call a function; just do it directly. 
+Only use the results from the function call to get a list of similar questions. DO NOT create or look for your own list of questions, only use the results from the function call. 
+When you get back the response from the function, immediately answer with a list of the top 3 similar questions you found.
+So from recognising it is a learning question to answering with similar questions that you found should all happen in one answer response from you.
+When you have answered with the top similar questions, ask if there is that matches what I want to learn`;
 
 export const defaultConfig = [
   { service: "vad", options: [{ name: "params", value: { stop_secs: 0.5 } }] },
@@ -104,7 +118,7 @@ export const defaultConfig = [
         value: [
           {
             role: "system",
-            content: weatherMenPrompt, //defaultLLMPrompt,
+            content: learningAssistantPrompt, //defaultLLMPrompt,
           },
         ],
       },
@@ -112,27 +126,27 @@ export const defaultConfig = [
       {
           name: "tools",
           value: [
-            {
-              name: "get_pims_weather",
-              description:
-                "Get the weather in a given location. This includes the conditions as well as the temperature.",
-              input_schema: {
-                type: "object",
-                properties: {
-                  location: {
-                    type: "string",
-                    description: "The city, e.g. San Francisco"
-                  },
-                  format: {
-                    type: "string",
-                    enum: ["celsius", "fahrenheit"],
-                    description:
-                      "The temperature unit to use. Infer this from the users location."
-                  }
-                },
-                required: ["location", "format"]
-              }
-            },
+            // {
+            //   name: "get_pims_weather",
+            //   description:
+            //     "Get the weather in a given location. This includes the conditions as well as the temperature.",
+            //   input_schema: {
+            //     type: "object",
+            //     properties: {
+            //       location: {
+            //         type: "string",
+            //         description: "The city, e.g. San Francisco"
+            //       },
+            //       format: {
+            //         type: "string",
+            //         enum: ["celsius", "fahrenheit"],
+            //         description:
+            //           "The temperature unit to use. Infer this from the users location."
+            //       }
+            //     },
+            //     required: ["location", "format"]
+            //   }
+            // },
             {
               name: "search_similar_learning_questions",
               description:
@@ -151,9 +165,9 @@ export const defaultConfig = [
                       "The level at which the users wants to receive an explanation to its question. Ask if you're unsure."
                   }
                 },
-                required: ["original_question", "level"]
+                required: []
               }
-            }
+            },
           ]
         },
     ],
