@@ -100,7 +100,7 @@ export default function Home() {
         if (fn.functionName === "search_similar_learning_questions") {
           console.log("Going to call the API for similar learning questions");
           const response = await fetch(
-            `/api/semantic_search?original_question=blue`
+            `http://localhost:8000/semantic_search?original_question=blue`
           );
           if (response.ok) {
             console.log("Successfully called the API for similar learning questions");
