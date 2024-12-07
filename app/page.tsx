@@ -107,6 +107,17 @@ export default function Home() {
           }
           const json = await response.json();
           return json;
+        } else if (fn.functionName === "start_learning_session") {
+          console.log("Going to call the API for starting a learning session");
+          const response = await fetch(
+            `/api/learning_path/start`
+          );
+          if (response.ok) {
+            console.log("Successfully started a learning session");
+          }
+          const json = await response.json();
+          return json;
+
         } else {
         return { error: "couldn't fetch similar learning questions" };
       }

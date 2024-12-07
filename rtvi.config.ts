@@ -88,7 +88,10 @@ If it is a learning question, directly call the 'search_similar_learning_questio
 You don't need to tell me if you're going to call a function; just do it directly. 
 Answer with a list of the top 3 similar questions you found.
 Only use the results from the function call to get a list of similar questions. DO NOT create or look for your own list of questions, only use the results from the function call. 
-After you have answered with the top similar questions, ask if one of those questions matches what I want to learn`;
+After you have answered with the top similar questions, ask if one of those questions matches what I want to learn.
+If one of the questions matches what I want to learn, ask me if I want to explore that topic further with you with some guided discovery questions.
+If I say yes, call the 'start_learning_session' function and answer with the response you get from the function.
+`;
 
 //If it is a learing question: confirm that it is a learning question and state you will look for similar questions. 
 
@@ -168,6 +171,17 @@ export const defaultConfig = [
                 required: []
               }
             },
+            {
+              name: "start_learning_session",
+              description: "Start a guided learning session to explore a topic further.",
+              input_schema: {
+                type: "object",
+                properties: {
+                  topic: { type: "string" }
+                },
+                required: []
+              }
+            }
           ]
         },
     ],

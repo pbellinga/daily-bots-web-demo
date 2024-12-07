@@ -19,6 +19,6 @@ export async function GET(request: NextRequest) {
     
 //   }
   return Response.json({
-    similar_questions: ["Sharing is caring!", "Ahadeb spirit!", "Why is the sky red?"]
+    similar_questions: ["Why is the sky blue?","Why is the sky turn red durign the evening", "Woohoo! Ahadeb spirit!", ]
   });
 }
