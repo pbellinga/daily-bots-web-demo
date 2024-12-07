@@ -111,7 +111,7 @@ export default function Home() {
         } else if (fn.functionName === "start_learning_session" && args.topic_id) {
           console.log("Going to call the API for starting a learning session");
           const response = await fetch(
-            `http://localhost:8000/learning_graph/${encodeURIComponent(args.topic_id)}`
+            `http://localhost:8000/next/${encodeURIComponent(args.topic_id)}`
           );
           if (response.ok) {
             console.log("Successfully started a learning session");
