@@ -62,10 +62,21 @@ export const defaultServices = {
   stt: "deepgram",
 };
 
-export const defaultLLMPrompt = `You are a assistant called ExampleBot. You can ask me anything.
+
+export const defaultLLMPrompt = `Start by introducing your character . You can ask me anything.
 Keep responses brief and legible.
 Your responses will converted to audio. Please do not include any special characters in your response other than '!' or '?'.
 Start by briefly introducing yourself.`;
+
+export const weatherMenPrompt = `You are a funny TV weatherman named Wally. 
+Your job is to present the weather to me. 
+You start by stating your name very enthousiastically and then greeting me with a weather related joke. (but keep it short)
+You can call the 'get_weather' function to get weather information. 
+Start by asking me for my location. Then, use 'get_weather' to give me a forecast. 
+Then, answer any questions I have about the weather. Keep your introduction and responses very brief. 
+You don't need to tell me if you're going to call a function; just do it directly. 
+Keep your words to a minimum. 
+When you're delivering the forecast, you can use more words and personality.`;
 
 export const defaultConfig = [
   { service: "vad", options: [{ name: "params", value: { stop_secs: 0.5 } }] },
@@ -93,7 +104,7 @@ export const defaultConfig = [
         value: [
           {
             role: "system",
-            content: defaultLLMPrompt,
+            content: weatherMenPrompt, //defaultLLMPrompt,
           },
         ],
       },
@@ -108,6 +119,59 @@ export const defaultConfig = [
     ],
   },
 ];
+
+// export const defaultConfig = [
+//   {
+//     service: "llm",
+//     options: [
+//       {
+//         name: "initial_messages",
+//         value: [
+//           {
+//             role: "system",
+//             content: [
+//               {
+//                 type: "text",
+//                 text: "You are a TV weatherman named Wally. Your job is to present the weather to me. You can call the 'get_weather' function to get weather information. Start by asking me for my location. Then, use 'get_weather' to give me a forecast. Then, answer any questions I have about the weather. Keep your introduction and responses very brief. You don't need to tell me if you're going to call a function; just do it directly. Keep your words to a minimum. When you're delivering the forecast, you can use more words and personality.",
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//       {
+//         name: "run_on_config",
+//         value: true,
+//       },
+//       {
+//         name: "tools",
+//         value: [
+//           {
+//             name: "get_weather",
+//             description:
+//               "Get the weather in a given location. This includes the conditions as well as the temperature.",
+//             input_schema: {
+//               type: "object",
+//               properties: {
+//                 location: {
+//                   type: "string",
+//                   description: "The city, e.g. San Francisco",
+//                 },
+//                 format: {
+//                   type: "string",
+//                   enum: ["celsius", "fahrenheit"],
+//                   description:
+//                     "The temperature unit to use. Infer this from the users location.",
+//                 },
+//               },
+//               required: ["location", "format"],
+//             },
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ];
+
 
 export const LLM_MODEL_CHOICES = [
   {
@@ -178,7 +242,15 @@ export const LLM_MODEL_CHOICES = [
   },
 ];
 
+
+
+
 export const PRESET_CHARACTERS = [
+  {
+    name: "Weatherman",
+    prompt: weatherMenPrompt,
+    voice: "79a125e8-cd45-4c13-8a67-188112f4dd22",
+  },
   {
     name: "Default",
     prompt: `You are a assistant called ExampleBot. You can ask me anything.

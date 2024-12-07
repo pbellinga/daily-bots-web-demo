@@ -3,7 +3,7 @@
 import { DailyTransport } from "@daily-co/realtime-ai-daily";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { useEffect, useRef, useState } from "react";
-import { LLMHelper, RTVIClient } from "realtime-ai";
+import { FunctionCallParams, LLMHelper, RTVIClient } from "realtime-ai";
 import { RTVIClientAudio, RTVIClientProvider } from "realtime-ai-react";
 
 import App from "@/components/App";
@@ -20,25 +20,87 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const voiceClientRef = useRef<RTVIClient | null>(null);
 
+  console.log("Rendering Home");
+  console.log(voiceClientRef.current);
+
+  // useEffect(() => {
+  //   if (!showSplash || voiceClientRef.current) {
+  //     return;
+  //   }
+
   useEffect(() => {
-    if (!showSplash || voiceClientRef.current) {
+    if (voiceClientRef.current) {
+      console.log("Voice client already exists");
       return;
     }
 
     const voiceClient = new RTVIClient({
       transport: new DailyTransport(),
       params: {
-        baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "/api",
+        baseUrl: `/api`,
         requestData: {
-          services: defaultServices,
-          config: defaultConfig,
+          services: {
+            stt: "deepgram",
+            tts: "cartesia",
+            llm: "anthropic",
+          },
         },
-      },
-      timeout: BOT_READY_TIMEOUT,
-    });
+        endpoints: {
+          connect: "/connect",
+          action: "/actions",
+        },
+        config: [
+          {
+            service: "tts",
+            options: [
+              {
+                name: "voice",
+                value: "79a125e8-cd45-4c13-8a67-188112f4dd22",
+              },
+            ],
+          },
+          ...defaultConfig,
+        ],
+        },
+      });
 
-    const llmHelper = new LLMHelper({});
-    voiceClient.registerHelper("llm", llmHelper);
+    // const voiceClient = new RTVIClient({
+    //   transport: new DailyTransport(),
+    //   params: {
+    //     baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "/api",
+    //     requestData: {
+    //       services: defaultServices,
+    //       config: defaultConfig,
+    //     },
+    //   },
+    //   timeout: BOT_READY_TIMEOUT,
+    // });
+
+    // Below the RTVIClient instance you created
+    const llmHelper = voiceClient.registerHelper(
+      "llm",
+      new LLMHelper({
+        callbacks: {},
+      })
+    ) as LLMHelper;
+
+    llmHelper.handleFunctionCall(async (fn: FunctionCallParams) => {
+      const args = fn.arguments as any;
+      if (fn.functionName === "get_weather" && args.location) {
+        const response = await fetch(
+          `/api/weather?location=${encodeURIComponent(args.location)}`
+        );
+        const json = await response.json();
+        return json;
+      } else {
+        return { error: "couldn't fetch weather" };
+      }
+    });
+    
+
+
+    // const llmHelper = new LLMHelper({});
+    // voiceClient.registerHelper("llm", llmHelper);
 
     voiceClientRef.current = voiceClient;
   }, [showSplash]);
