@@ -20,8 +20,7 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const voiceClientRef = useRef<RTVIClient | null>(null);
 
-  console.log("Rendering Home");
-  console.log(voiceClientRef.current);
+  console.log("Rendering from Home function");
 
   // useEffect(() => {
   //   if (!showSplash || voiceClientRef.current) {
@@ -86,22 +85,14 @@ export default function Home() {
 
     llmHelper.handleFunctionCall(async (fn: FunctionCallParams) => {
       const args = fn.arguments as any;
-      if (fn.functionName === "get_pims_weather" && args.location) {
+      if (fn.functionName === "get_weather" && args.location) {
         const response = await fetch(
           `/api/weather?location=${encodeURIComponent(args.location)}`
         );
         const json = await response.json();
         return json;
-      } else if (fn.functionName === "search_similar_learning_questions" && args.original_question && args.level) {
-        console.log("Searching for similar learning questions");
-        const response = await fetch(
-          `/api/semantic_search?original_question=${encodeURIComponent(args.original_question)}&level=${encodeURIComponent(args.level)}`
-        );
-        const json = await response.json();
-        return json;
       } else {
-        console.log("Couldn't finish function call");
-        return { error: "couldn't finish function call" };
+        return { error: "couldn't fetch weather" };
       }
     });
     

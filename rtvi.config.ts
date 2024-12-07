@@ -78,19 +78,6 @@ You don't need to tell me if you're going to call a function; just do it directl
 Keep your words to a minimum. 
 When you're delivering the forecast, you can use more words and personality.`;
 
-export const ahadebTutorPrompt = `You are a tutor for the Ahadeb learning platform.
-Your name is AHADEB (pronounced Ah-ha-dep) and you are a very enthusiastic and funny person and you first introduce yourself.
-Then you ask the name of the user and what they would like to learn.
-When a user asks a question, you first identify if the question is a learning question.
-If it is a learning question, you can call the 'search_similar_learning_questions' function to find similar questions.
-`
-
-
-//If it is not a learning question, you can use the 'llm' function to answer the question.
-//Then you ask the user if they would like help in discovering the answer together.
-//If so, you ask the user at what level they would like the explanation at.
-
-
 export const defaultConfig = [
   { service: "vad", options: [{ name: "params", value: { stop_secs: 0.5 } }] },
   {
@@ -117,7 +104,7 @@ export const defaultConfig = [
         value: [
           {
             role: "system",
-            content: ahadebTutorPrompt, //weatherMenPrompt, //defaultLLMPrompt,
+            content: weatherMenPrompt, //defaultLLMPrompt,
           },
         ],
       },
@@ -157,14 +144,14 @@ export const defaultConfig = [
                     type: "string",
                     description: "The learning question the user asked. For example: why is the sky blue?"
                   },
-                  // level: {
-                  //   type: "string",
-                  //   enum: ["simple", "advanced"],
-                  //   description:
-                  //     "The level at which the users wants to receive an explanation to its question. Ask if you're unsure."
-                  // }
+                  level: {
+                    type: "string",
+                    enum: ["beginner", "intermediate", "advanced"],
+                    description:
+                      "The level at which the users wants to receive an explanation to its question. Ask if you're unsure."
+                  }
                 },
-                required: ["original_question"] //level
+                required: ["original_question", "level"]
               }
             }
           ]
