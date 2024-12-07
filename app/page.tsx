@@ -35,6 +35,7 @@ export default function Home() {
 
     const voiceClient = new RTVIClient({
       transport: new DailyTransport(),
+      timeout: BOT_READY_TIMEOUT,
       params: {
         baseUrl: `/api`,
         requestData: {
@@ -60,7 +61,7 @@ export default function Home() {
           },
           ...defaultConfig,
         ],
-        },
+        }
       });
 
     // const voiceClient = new RTVIClient({
@@ -100,17 +101,17 @@ export default function Home() {
         if (fn.functionName === "search_similar_learning_questions") {
           console.log("Going to call the API for similar learning questions");
           const response = await fetch(
-            `http://localhost:8000/semantic_search?original_question=blue`
+            `http://localhost:8000/semantic_search?original_question=why%20is%20the%20sky%20blue`
           );
           if (response.ok) {
             console.log("Successfully called the API for similar learning questions");
           }
           const json = await response.json();
           return json;
-        } else if (fn.functionName === "start_learning_session") {
+        } else if (fn.functionName === "start_learning_session" && args.topic_id) {
           console.log("Going to call the API for starting a learning session");
           const response = await fetch(
-            `/api/learning_path/start`
+            `http://localhost:8000/learning_graph/${encodeURIComponent(args.topic_id)}`
           );
           if (response.ok) {
             console.log("Successfully started a learning session");

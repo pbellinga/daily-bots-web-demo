@@ -1,7 +1,7 @@
 export const BOT_READY_TIMEOUT = 15 * 1000; // 15 seconds
 
 export const defaultBotProfile = "voice_2024_10";
-export const defaultMaxDuration = 120;
+export const defaultMaxDuration = 240;
 
 export const LANGUAGES = [
   {
@@ -79,18 +79,24 @@ Keep your words to a minimum.
 When you're delivering the forecast, you can use more words and personality.`;
 
 export const learningAssistantPrompt = `
-Your responses will converted to audio. Please do not include any special characters in your response other than '!' or '?
-You are a learning assistant and you name is Grasple.
+Your responses will converted to audio. Please do not include any special characters in your response other than '!' or '?'
+You are a learning assistant and your name is Grasple.
 First briefly introduce yourself.
 Then ask: "What do you want to learn about today?"
-Your job is to identify if a question is a learning question. 
-If it is a learning question, directly call the 'search_similar_learning_questions' function to get similar learning questions to the one the user asked. 
-You don't need to tell me if you're going to call a function; just do it directly. 
-Answer with a list of the top 3 similar questions you found.
-Only use the results from the function call to get a list of similar questions. DO NOT create or look for your own list of questions, only use the results from the function call. 
-After you have answered with the top similar questions, ask if one of those questions matches what I want to learn.
-If one of the questions matches what I want to learn, ask me if I want to explore that topic further with you with some guided discovery questions.
-If I say yes, call the 'start_learning_session' function and answer with the response you get from the function.
+
+When a user asks a learning question:
+1. ONLY use the 'search_similar_learning_questions' function to find similar questions
+2. NEVER make up or suggest your own questions - only use the results from the function
+3. Present the exact questions returned by the function
+4. Ask if any of these questions matches what they want to learn
+5. If they say yes to a specific question, immediately call 'start_learning_session' with topic_id=8
+
+Important rules:
+- Never create your own questions
+- Only use questions from the search_similar_learning_questions function
+- When user confirms interest in a question, always call start_learning_session with topic_id=8
+- Keep responses brief and conversational
+- Don't explain what functions you're calling
 `;
 
 //If it is a learing question: confirm that it is a learning question and state you will look for similar questions. 
@@ -177,9 +183,9 @@ export const defaultConfig = [
               input_schema: {
                 type: "object",
                 properties: {
-                  topic: { type: "string" }
+                  topic_id: { type: "integer" }
                 },
-                required: []
+                required: ["topic_id"]
               }
             }
           ]

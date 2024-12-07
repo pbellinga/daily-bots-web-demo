@@ -4,26 +4,26 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   // Detailed request logging
   const url = request.nextUrl
-  console.log('--------------------------------')
-  console.log('Middleware Debug Info:')
-  console.log('Full URL:', url.toString())
-  console.log('Pathname:', url.pathname)
-  console.log('Search Params:', url.search)
-  console.log('Method:', request.method)
-  console.log('Headers:', Object.fromEntries(request.headers))
+//   console.log('--------------------------------')
+//   console.log('Middleware Debug Info:')
+//   console.log('Full URL:', url.toString())
+//   console.log('Pathname:', url.pathname)
+//   console.log('Search Params:', url.search)
+//   console.log('Method:', request.method)
+//   console.log('Headers:', Object.fromEntries(request.headers))
 
-  // Specific handling for semantic_search endpoint
-  if (url.pathname === '/semantic_search') {
-    console.log('Handling semantic_search request')
-    const response = NextResponse.next()
-    setCorsHeaders(response)
-    console.log('Added CORS headers for semantic_search')
-    return response
-  }
+//   // Specific handling for semantic_search endpoint
+//   if (url.pathname === '/semantic_search') {
+//     // console.log('Handling semantic_search request')
+//     const response = NextResponse.next()
+//     setCorsHeaders(response)
+//     // console.log('Added CORS headers for semantic_search')
+//     return response
+//   }
 
   // Handle CORS preflight requests
   if (request.method === 'OPTIONS') {
-    console.log('Handling OPTIONS preflight request')
+    // console.log('Handling OPTIONS preflight request')
     const response = new NextResponse(null, { status: 204 })
     setCorsHeaders(response)
     return response
@@ -45,7 +45,7 @@ function setCorsHeaders(response: NextResponse) {
 
   Object.entries(headers).forEach(([key, value]) => {
     response.headers.set(key, value)
-    console.log(`Set header ${key}: ${value}`)
+    // console.log(`Set header ${key}: ${value}`)
   })
 }
 
